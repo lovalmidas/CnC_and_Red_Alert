@@ -1959,6 +1959,7 @@ TARGET FootClass::Greatest_Threat(ThreatType method)// const
  * HISTORY:                                                                                    *
  *   07/18/1995 JLB : Created.                                                                 *
  *   07/24/1996 JLB : Removes target from NavQueue list.                                       *
+ *   03/18/2026 LVM : Reimplement target removal and recompaction of NavQueue list             *
  *=============================================================================================*/
 void FootClass::Detach(TARGET target, bool all)
 {
@@ -1988,16 +1989,17 @@ void FootClass::Detach(TARGET target, bool all)
 	}
 
 	/*
-	**	Remove the target from the NavQueue list as well.
+  **	Remove the target from the NavQueue list and recoompact the list. Clear remaining entries to TARGET_NONE.
 	*/
-	for (int index = 0; index < ARRAY_SIZE(NavQueue); index++) {
-		if (NavQueue[index] == target) {
-			NavQueue[index] = TARGET_NONE;
-			if (index < ARRAY_SIZE(NavQueue)-1) {
-				memmove(&NavQueue[index], &NavQueue[index+1], ((ARRAY_SIZE(NavQueue)-index)-1) * sizeof(NavQueue[0]));
-				index--;
-			}
-		}
+	int write = 0;
+	for (int read = 0; read < ARRAY_SIZE(NavQueue); read++) {
+		if (NavQueue[read] != target) {
+			NavQueue[write++] = NavQueue[read];
+    }
+	}
+
+	for (int index = write; index < ARRAY_SIZE(NavQueue); index++) {
+		NavQueue[index] = TARGET_NONE;
 	}
 
 	/*
