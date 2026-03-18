@@ -916,6 +916,7 @@ CELL DisplayClass::Set_Cursor_Pos(CELL pos)
  *                                                                                             *
  * HISTORY:                                                                                    *
  *   03/31/1995 BRR : Created.                                                                 *
+ *   03/18/2026 LVM : Fix incorrect NULL list check                                            *
  *=============================================================================================*/
 void DisplayClass::Get_Occupy_Dimensions(int & w, int & h, short const * list) const
 {
@@ -928,7 +929,10 @@ void DisplayClass::Get_Occupy_Dimensions(int & w, int & h, short const * list) c
 	w = 0;
 	h = 0;
 
-	if (!list) {
+	/*
+  ** lvm 20260318: Fix, enter loop only if list exists
+	*/
+	if (list) {
 		/*
 		** Loop through all cell offsets, accumulating max & min x- & y-coords
 		*/
