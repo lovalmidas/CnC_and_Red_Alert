@@ -113,7 +113,10 @@ class INIClass {
 		bool Put_PKey(PKey const & key);
 
 	protected:
-		enum {MAX_LINE_LENGTH=128};
+		/*
+    **	lvm 20260318: Increase maximum line length, 128 -> 1024 to accomodate longer lines in the INI file.
+		*/
+		enum {MAX_LINE_LENGTH=1024};
 
 		/*
 		**	The value entries for the INI file are stored as objects of this type.
