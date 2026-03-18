@@ -339,6 +339,7 @@ void TActionClass::Decode_Pointers(void)
  * HISTORY:                                                                                    *
  *   02/22/1996 JLB : Created.                                                                 *
  *   04/10/1996 JLB : Added the ID parameter.                                                  *
+ *   03/18/2026 LVM : Fix invalid team crash.                                                  *
  *=============================================================================================*/
 bool TActionClass::operator() (HousesType house, ObjectClass * object, int id, CELL cell)
 {
@@ -351,7 +352,6 @@ bool TActionClass::operator() (HousesType house, ObjectClass * object, int id, C
 		trig = Triggers.Raw_Ptr(id);
 	}
 	bool success = true;
-//	TeamTypeClass * ttype = Team;
 
 	/*
 	**	Ensure that the specified object is not actually dead. A dead object could
@@ -656,23 +656,27 @@ bool TActionClass::operator() (HousesType house, ObjectClass * object, int id, C
 		**	Manually create the team specified.
 		*/
 		case TACTION_CREATE_TEAM:
-			ScenarioInit++;
-			Team->Create_One_Of();
-			ScenarioInit--;
+			if (Team.Is_Valid()) {
+				ScenarioInit++;
+				Team->Create_One_Of();
+				ScenarioInit--;
+			}
 			break;
 
 		/*
 		**	Destroy all teams of the type specified.
 		*/
 		case TACTION_DESTROY_TEAM:
-			Team->Destroy_All_Of();
+			if (Team.Is_Valid())
+				Team->Destroy_All_Of();
 			break;
 
 		/*
 		**	Create a reinforcement of the team specified.
 		*/
 		case TACTION_REINFORCEMENTS:
-			success = Do_Reinforcements(&*Team);
+			if (Team.Is_Valid())
+				success = Do_Reinforcements(&*Team);
 			break;
 
 		/*
