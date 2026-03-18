@@ -315,6 +315,7 @@ void InfantryClass::operator delete(void * ptr)
  *   09/08/1994 JLB : Created.                                                                 *
  *   11/22/1994 JLB : Shares base damage handler for techno objects.                           *
  *   03/31/1995 JLB : Revenge factor.                                                          *
+ *   03/18/2026 LVM : Check if infantry is already performing a death animation                *
  *=============================================================================================*/
 ResultType InfantryClass::Take_Damage(int & damage, int distance, WarheadType warhead, TechnoClass * source, bool forced)
 {
@@ -353,6 +354,18 @@ ResultType InfantryClass::Take_Damage(int & damage, int distance, WarheadType wa
 	if (res == RESULT_NONE) return(res);
 
 	if (res == RESULT_DESTROYED) {
+		switch (Doing)  {
+			/*
+			**	If we're already doing a death animation, then don't do anything else.
+			*/
+			case DO_GUN_DEATH:
+			case DO_EXPLOSION_DEATH:
+			case DO_EXPLOSION2_DEATH:
+			case DO_GRENADE_DEATH:
+			case DO_FIRE_DEATH:
+				return(res);
+    }
+
 		if (*this == INFANTRY_TANYA) {
 			IsTanyaDead = true;
 		}
