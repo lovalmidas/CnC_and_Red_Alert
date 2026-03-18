@@ -2251,6 +2251,7 @@ void BuildingClass::Fire_Out(void)
  *                                                                                             *
  * HISTORY:                                                                                    *
  *   12/24/1994 JLB : Created.                                                                 *
+ *   18/03/2026 LVM : Fix drain and capacity being reverted if limboed without Grand_Opening() *
  *=============================================================================================*/
 bool BuildingClass::Limbo(void)
 {
@@ -2270,8 +2271,14 @@ bool BuildingClass::Limbo(void)
 		**	Update the power status of the owner's house.
 		*/
 		House->Adjust_Power(-Power_Output());
-		House->Adjust_Drain(-Class->Drain);
-		House->Adjust_Capacity(-Class->Capacity, true);
+
+		/*
+		**	lvm 20260318: Revert drain and capacity only if Grand_Opening() had already been called.
+		*/
+		if (HasOpened) {
+			House->Adjust_Drain(-Class->Drain);
+			House->Adjust_Capacity(-Class->Capacity, true);
+		}
 		if (House == PlayerPtr) {
 			Map.PowerClass::IsToRedraw = true;
 			Map.Flag_To_Redraw(false);
