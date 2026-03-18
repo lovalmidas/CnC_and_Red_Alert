@@ -2251,7 +2251,7 @@ void BuildingClass::Fire_Out(void)
  *                                                                                             *
  * HISTORY:                                                                                    *
  *   12/24/1994 JLB : Created.                                                                 *
- *   18/03/2026 LVM : Fix drain and capacity being reverted if limboed without Grand_Opening() *
+ *   03/18/2026 LVM : Fix drain and capacity being reverted if limboed without Grand_Opening() *
  *=============================================================================================*/
 bool BuildingClass::Limbo(void)
 {

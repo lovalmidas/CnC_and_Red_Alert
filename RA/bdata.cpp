@@ -3048,7 +3048,7 @@ void BuildingTypeClass::Init_Heap(void)
  * HISTORY:                                                                                    *
  *   05/28/1994 JLB : Created.                                                                 *
  *   06/11/1994 JLB : Updated construction time and frame count logic.                         *
- *   18/03/2026 LVM : Always allow Cameos to be loaded even with TechLevel=-1.                 *
+ *   03/18/2026 LVM : Always allow Cameos to be loaded even with TechLevel=-1.                 *
  *=============================================================================================*/
 void BuildingTypeClass::One_Time(void)
 {
@@ -3764,7 +3764,7 @@ bool BuildingTypeClass::Flush_For_Placement(CELL cell, HouseClass * house)  cons
  *                                                                                             *
  * HISTORY:                                                                                    *
  *   07/19/1996 JLB : Created.                                                                 *
- *   18/03/2026 LVM : Fix Drain being persisted even after positive Power applied.             *
+ *   03/18/2026 LVM : Fix Drain being persisted even after positive Power applied.             *
  *=============================================================================================*/
 bool BuildingTypeClass::Read_INI(CCINIClass & ini)
 {

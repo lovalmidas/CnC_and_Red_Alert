@@ -234,7 +234,7 @@ void ThemeClass::AI(void)
  * HISTORY:                                                                                    *
  *   01/16/1995 JLB : Created.                                                                 *
  *   01/19/1995 JLB : Will not play the same song twice when in shuffle mode.                  *
- *   18/03/2026 LVM : If no music is available, break the infinite loop and return THEME_NONE. *
+ *   03/18/2026 LVM : If no music is available, break the infinite loop and return THEME_NONE. *
  *=============================================================================================*/
 ThemeType ThemeClass::Next_Song(ThemeType theme) const
 {
