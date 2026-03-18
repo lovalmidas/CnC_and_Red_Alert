@@ -3048,6 +3048,7 @@ void BuildingTypeClass::Init_Heap(void)
  * HISTORY:                                                                                    *
  *   05/28/1994 JLB : Created.                                                                 *
  *   06/11/1994 JLB : Updated construction time and frame count logic.                         *
+ *   18/03/2026 LVM : Always allow Cameos to be loaded even with TechLevel=-1.                 *
  *=============================================================================================*/
 void BuildingTypeClass::One_Time(void)
 {
@@ -3102,7 +3103,7 @@ void BuildingTypeClass::One_Time(void)
 		/*
 		**	Fetch the sidebar cameo image for this building.
 		*/
-		if (building.Level != -1) {
+		//if (building.Level != -1) {
 //		if (building.IsBuildable) {
 			sprintf(buffer, "%sICON", building.Graphic_Name());
 
@@ -3112,7 +3113,7 @@ void BuildingTypeClass::One_Time(void)
 
 			_makepath(fullname, NULL, NULL, buffer, ".SHP");
 			((void const *&)building.CameoData) = MFCD::Retrieve(fullname);
-		}
+		//}
 
 		/*
 		**	Fetch the construction animation for this building.
