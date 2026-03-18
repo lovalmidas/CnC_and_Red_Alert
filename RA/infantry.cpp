@@ -2174,6 +2174,7 @@ bool InfantryClass::Limbo(void)
  *                                                                                             *
  * HISTORY:                                                                                    *
  *   12/26/1994 JLB : Created.                                                                 *
+ *   03/18/2026 LVM : Apply fire check before firing                                           *
  *=============================================================================================*/
 BulletClass * InfantryClass::Fire_At(TARGET target, int which)
 {
@@ -2183,6 +2184,13 @@ BulletClass * InfantryClass::Fire_At(TARGET target, int which)
 	Mark(MARK_OVERLAP_UP);
 	IsFiring = false;
 	Mark(MARK_OVERLAP_DOWN);
+
+	/*
+	**	Infantry performing firing animations should check the validity of their fire again
+	*/
+	if (Can_Fire(target, which) != FIRE_OK) {
+		return(NULL);
+  }
 
 	BulletClass * bullet = FootClass::Fire_At(target, which);
 	if (bullet != NULL && !IsInLimbo) {
@@ -3569,6 +3577,7 @@ bool InfantryClass::Edge_Of_World_AI(void)
  *                                                                                             *
  * HISTORY:                                                                                    *
  *   07/29/1996 JLB : Created.                                                                 *
+ *   03/18/2026 LVM : Skip post-fire processing if no bullet was produced from Fire_At().      *
  *=============================================================================================*/
 void InfantryClass::Firing_AI(void)
 {
@@ -3647,23 +3656,23 @@ void InfantryClass::Firing_AI(void)
 		if (IsProne) firestage = Class->ProneLaunch;
 
 		if (IsFiring && Fetch_Stage() == firestage) {
-			Fire_At(TarCom, primary);
+			if (Fire_At(TarCom, primary)) {
+				/*
+				**	Run away from slowly approaching projectiles.
+				*/
+				if (Class->PrimaryWeapon->MaxSpeed < Rule.Incoming) {
+					Map[::As_Cell(TarCom)].Incoming(Coord, true);
+				}
 
-			/*
-			**	Run away from slowly approaching projectiles.
-			*/
-			if (Class->PrimaryWeapon->MaxSpeed < Rule.Incoming) {
-				Map[::As_Cell(TarCom)].Incoming(Coord, true);
-			}
-
-			/*
-			** If it's a dog, get rid of him (he'll be re-created when he hits)
-			*/
-			if (Class->IsDog) {
-				WasSelected = IsSelected;
-				ScenarioInit++;
-				Limbo();
-				ScenarioInit--;
+				/*
+				** If it's a dog, get rid of him (he'll be re-created when he hits)
+				*/
+				if (Class->IsDog) {
+					WasSelected = IsSelected;
+					ScenarioInit++;
+					Limbo();
+					ScenarioInit--;
+				}
 			}
 		}
 	} else {
