@@ -4370,6 +4370,12 @@ typedef enum {
 	CD_DVD
 } CD_VOLUME;
 
+#ifdef NOCD
+bool Force_CD_Available(int cd)
+{
+	return(true);
+}
+#else
 #ifdef FIXIT_VERSION_3
 
 #ifndef DVD
@@ -5096,6 +5102,7 @@ bool Force_CD_Available(int cd)
 
 
 #endif	//	FIXIT_VERSION_3
+#endif	//	NOCD
 
 /***********************************************************************************************
  * Do_Record_Playback -- handles saving/loading map pos & current object                       *

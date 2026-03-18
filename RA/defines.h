@@ -148,6 +148,11 @@
 //#define	SORTDRAW
 
 /**********************************************************************
+**	lvm custom defines
+*/
+#define NOCD													// Skip CD checks
+
+/**********************************************************************
 **	If the scenario editor to to be active in this build then uncomment
 **	the following #define line.
 */
