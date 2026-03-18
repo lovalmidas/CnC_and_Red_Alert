@@ -3764,6 +3764,7 @@ bool BuildingTypeClass::Flush_For_Placement(CELL cell, HouseClass * house)  cons
  *                                                                                             *
  * HISTORY:                                                                                    *
  *   07/19/1996 JLB : Created.                                                                 *
+ *   18/03/2026 LVM : Fix Drain being persisted even after positive Power applied.             *
  *=============================================================================================*/
 bool BuildingTypeClass::Read_INI(CCINIClass & ini)
 {
@@ -3780,6 +3781,9 @@ bool BuildingTypeClass::Read_INI(CCINIClass & ini)
 		if (Power < 0) {
 			Drain = -Power;
 			Power = 0;
+		}
+		else {
+			Drain = 0;
 		}
 		return(true);
 	}
