@@ -234,10 +234,15 @@ void ThemeClass::AI(void)
  * HISTORY:                                                                                    *
  *   01/16/1995 JLB : Created.                                                                 *
  *   01/19/1995 JLB : Will not play the same song twice when in shuffle mode.                  *
+ *   18/03/2026 LVM : If no music is available, break the infinite loop and return THEME_NONE. *
  *=============================================================================================*/
 ThemeType ThemeClass::Next_Song(ThemeType theme) const
 {
 	if (theme == THEME_NONE || theme == THEME_PICK_ANOTHER || (theme != THEME_QUIET && !_themes[theme].Repeat && !Options.IsScoreRepeat)) {
+		/*
+		**	lvm 20260318: Offer a method to break out of the loop if all themes are disallowed.
+		*/
+		int retry = THEME_COUNT;
 		if (Options.IsScoreShuffle) {
 
 			/*
@@ -247,7 +252,7 @@ ThemeType ThemeClass::Next_Song(ThemeType theme) const
 			ThemeType newtheme;
 			do {
 				newtheme = Sim_Random_Pick(THEME_FIRST, THEME_LAST);
-			} while (newtheme == theme || !Is_Allowed(newtheme));
+			} while (retry-- && (newtheme == theme || !Is_Allowed(newtheme)));
 			theme = newtheme;
 
 		} else {
@@ -260,8 +265,10 @@ ThemeType ThemeClass::Next_Song(ThemeType theme) const
 				if (theme > THEME_LAST) {
 					theme = THEME_FIRST;
 				}
-			} while (!Is_Allowed(theme));
+			} while (retry-- && !Is_Allowed(theme));
 		}
+		if (retry <= 0)
+			theme = THEME_NONE;
 	}
 	return(theme);
 }
